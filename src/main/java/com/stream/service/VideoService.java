@@ -13,6 +13,13 @@ import java.util.UUID;
 public class VideoService {
     private final VideoRepository videoRepository;
 
+    public String playVideo(UUID id) {
+        return videoRepository.findById(id)
+                .filter(Video::isActive)
+                .map(video -> "Streaming video content for: " + video.getTitle())
+                .orElseThrow(() -> new RuntimeException("Video not found or is delisted"));
+    }
+
     //  Publish a new video
     public Video publishVideo(Video video) {
         return videoRepository.save(video);
@@ -39,7 +46,7 @@ public class VideoService {
             existingVideo.setTitle(updatedData.getTitle());
             existingVideo.setSynopsis(updatedData.getSynopsis());
             existingVideo.setDirector(updatedData.getDirector());
-            existingVideo.setCast(updatedData.getCast());
+            existingVideo.setVideoCast(updatedData.getVideoCast());
             existingVideo.setYearOfRelease(updatedData.getYearOfRelease());
             existingVideo.setGenre(updatedData.getGenre());
             existingVideo.setRunningTime(updatedData.getRunningTime());

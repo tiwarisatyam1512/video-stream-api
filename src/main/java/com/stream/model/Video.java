@@ -19,7 +19,8 @@ public class Video {
     private String title;
     private String synopsis;
     private String director;
-    private String cast;
+    @Column(name = "video_cast")  // Fix: Rename `cast` to `video_cast`
+    private String videoCast;
     private int yearOfRelease;
     private String genre;
     private int runningTime;

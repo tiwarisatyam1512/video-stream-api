@@ -14,6 +14,11 @@ import java.util.UUID;
 public class VideoController {
     private final VideoService videoService;
 
+    @GetMapping("/{id}/play")
+    public ResponseEntity<String> playVideo(@PathVariable UUID id) {
+        return ResponseEntity.ok(videoService.playVideo(id));
+    }
+
     @PostMapping
     public ResponseEntity<Video> publishVideo(@RequestBody Video video) {
         return ResponseEntity.ok(videoService.publishVideo(video));
