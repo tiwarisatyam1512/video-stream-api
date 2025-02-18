@@ -20,6 +20,9 @@ import java.util.UUID;
 @Builder
 public class Video {
 
+    @OneToOne(mappedBy = "video", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private EngagementStats engagementStats;
+
     /**
      * Unique identifier for the video.
      * <p>

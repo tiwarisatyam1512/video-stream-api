@@ -1,12 +1,18 @@
 package com.stream.service;
 
+import com.stream.model.EngagementStats;
 import com.stream.model.Video;
+import com.stream.model.VideoMetadataResponse;
 import com.stream.repository.VideoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import com.stream.repository.EngagementStatsRepository;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Service class for managing video-related operations.
@@ -18,6 +24,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class VideoService {
     private final VideoRepository videoRepository;
+    private final EngagementStatsRepository engagementStatsRepository;
 
     /**
      * Retrieves and returns a message indicating the video is being streamed.
@@ -113,4 +120,23 @@ public class VideoService {
             videoRepository.save(video);
         });
     }
+
+    /**
+     * Retrieves metadata for a video, including title, duration, and total views.
+     *
+     * @param videoId The unique identifier of the video.
+     * @return A {@link VideoMetadataResponse} containing video title, running time, and total views.
+     * @throws ResponseStatusException if the video is not found (returns 404 NOT FOUND).
+     */
+    public VideoMetadataResponse getVideoMetadata(UUID videoId) {
+        Video video = videoRepository.findById(videoId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Video not found"));
+
+        int views = engagementStatsRepository.findByVideoId(videoId)
+                .map(EngagementStats::getViews)
+                .orElse(0);
+
+        return new VideoMetadataResponse(video.getTitle(), video.getRunningTime(), views);
+    }
+
 }

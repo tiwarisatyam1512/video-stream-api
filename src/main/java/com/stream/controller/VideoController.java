@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
+import com.stream.model.VideoMetadataResponse;
 
 /**
  * REST Controller for managing video-related operations.
@@ -111,5 +112,18 @@ public class VideoController {
     public ResponseEntity<Void> delistVideo(@PathVariable UUID id) {
         videoService.delistVideo(id);
         return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * API endpoint to retrieve metadata for a video based on its ID.
+     *
+     * @param videoId The unique identifier of the video.
+     * @return A {@link ResponseEntity} containing the video metadata wrapped in {@link VideoMetadataResponse}.
+     * @throws ResponseStatusException if the video is not found (returns 404 NOT FOUND).
+     */
+    @GetMapping("/{videoId}/metadata")
+    public ResponseEntity<VideoMetadataResponse> getVideoMetadata(@PathVariable UUID videoId) {
+        VideoMetadataResponse metadata = videoService.getVideoMetadata(videoId);
+        return ResponseEntity.ok(metadata);
     }
 }

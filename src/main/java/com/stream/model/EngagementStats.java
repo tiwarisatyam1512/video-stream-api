@@ -29,8 +29,11 @@ public class EngagementStats {
      * Unique identifier for the engagement statistics record.
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     private UUID id;
+
+    @Column(name = "video_id", columnDefinition = "UUID")
+    private UUID videoId;
 
     /**
      * The video associated with these engagement statistics.
@@ -40,7 +43,7 @@ public class EngagementStats {
      * </p>
      */
     @OneToOne
-    @JoinColumn(name = "video_id", referencedColumnName = "id")
+    @JoinColumn(name = "video_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Video video;
 
     /**
